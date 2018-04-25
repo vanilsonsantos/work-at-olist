@@ -7,3 +7,8 @@
 *.log
 .env
 tmp
+.gradle
+out
+.jar
+.war
+*.class
