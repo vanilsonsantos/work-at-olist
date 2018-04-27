@@ -1,4 +1,4 @@
-package telecom.platform.sample;
+package com.telecom.platform;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
