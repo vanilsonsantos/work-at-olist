@@ -3,30 +3,36 @@ package com.telecom.platform.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.telecom.platform.validators.RequestResource;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import static com.telecom.platform.validators.ValidationMessages.*;
 
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class RecordCallRequestResource implements RequestResource {
 
+    @NotNull(message = NULL_TYPE_MESSAGE)
     @Pattern(regexp = "start|end", message = INVALID_TYPE_MESSAGE)
     @JsonProperty("type")
     private String type;
 
+    @NotNull(message = NULL_TIMESTAMP_MESSAGE)
     @JsonProperty("timestamp")
     private String timestamp;
 
-    @JsonProperty("call_id")
+    @NotNull(message = NULL_CALL_ID_MESSAGE)
     @Pattern(regexp = "^[+]?\\d+$", message = INVALID_CALL_ID_MESSAGE)
+    @JsonProperty("call_id")
     private String callId;
 
     @JsonProperty("source")
@@ -34,18 +40,6 @@ public class RecordCallRequestResource implements RequestResource {
 
     @JsonProperty("destination")
     private String destination;
-
-    public RecordCallRequestResource(String type,
-                                     String timestamp,
-                                     String callId,
-                                     String source,
-                                     String destination) {
-        this.type = type;
-        this.timestamp = timestamp;
-        this.callId = callId;
-        this.source = source;
-        this.destination = destination;
-    }
 
     @AssertTrue(message = INVALID_TIMESTAMP_MESSAGE)
     public boolean isValidTimestamp() {
@@ -61,7 +55,7 @@ public class RecordCallRequestResource implements RequestResource {
 
     @AssertTrue(message = INVALID_SOURCE_NUMBER_MESSAGE)
     public boolean isValidSourceNumber() {
-        if (source != null && shouldIncludePhoneNumber()) {
+        if (shouldIncludePhoneNumber()) {
             return isValidPhoneNumber(source);
         }
         return true;
@@ -69,7 +63,7 @@ public class RecordCallRequestResource implements RequestResource {
 
     @AssertTrue(message = INVALID_DESTINATION_NUMBER_MESSAGE)
     public boolean isValidDestinationNumber() {
-        if (destination != null && shouldIncludePhoneNumber()) {
+        if (shouldIncludePhoneNumber()) {
             return isValidPhoneNumber(destination);
         }
         return true;
@@ -80,7 +74,7 @@ public class RecordCallRequestResource implements RequestResource {
     }
 
     private boolean isValidPhoneNumber(String number) {
-        if (number.length() > 11 || number.length() < 10) {
+        if (number == null || number.length() > 11 || number.length() < 10) {
             return false;
         } else {
             String validPhoneNumberRegularExpression = "ˆ?(?:([1-9][0-9])\\s?)?(?:((?:9\\d|[2-9])\\d{3})\\-?(\\d{4}))$";

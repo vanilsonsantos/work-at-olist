@@ -6,13 +6,17 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.telecom.platform.validators.ValidationMessages.VALIDATION_ERRORS_MAPPER;
 
 @Component
 public class ValidationChecker {
 
     private Validator validator;
+    private static final String ERROR_MESSAGE = "Validation Failed";
 
     @Autowired
     public ValidationChecker(Validator validator) {
@@ -25,12 +29,11 @@ public class ValidationChecker {
 
         if(!constraintViolations.isEmpty()) {
 
-            String message = constraintViolations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toList())
-                    .toString();
+            List<ValidationError> errors = constraintViolations.stream()
+                    .map(error -> new ValidationError(VALIDATION_ERRORS_MAPPER.get(error.getMessage()), error.getMessage()))
+                    .collect(Collectors.toList());
 
-            throw new InvalidRequestResourceException(message);
+            throw new InvalidRequestResourceException(errors, ERROR_MESSAGE);
         }
     }
 }
