@@ -17,16 +17,6 @@ public class RecordCallRequestResourceTest {
     }
 
     @Test
-    public void shouldTimestampBeValid() {
-        assertTrue(recordCallRequestResourceTestBuilder.build().isValidTimestamp());
-    }
-
-    @Test
-    public void shouldTimestampBeInvalid() {
-        assertFalse(recordCallRequestResourceTestBuilder.withTimestamp("2016-invalid:00:00Z").build().isValidTimestamp());
-    }
-
-    @Test
     public void shouldSourceBeValid() {
         RecordCallRequestResource recordCallWithEightDigitsSourceNumber = recordCallRequestResourceTestBuilder
                 .withSource("2799347645")

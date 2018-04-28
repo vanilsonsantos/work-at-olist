@@ -3,6 +3,7 @@ package com.telecom.platform.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.telecom.platform.validators.RequestResource;
+import com.telecom.platform.validators.ValidTimestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import static com.telecom.platform.validators.ValidationMessages.*;
 
@@ -27,6 +26,7 @@ public class RecordCallRequestResource implements RequestResource {
     private String type;
 
     @NotNull(message = NULL_TIMESTAMP_MESSAGE)
+    @ValidTimestamp
     @JsonProperty("timestamp")
     private String timestamp;
 
@@ -40,18 +40,6 @@ public class RecordCallRequestResource implements RequestResource {
 
     @JsonProperty("destination")
     private String destination;
-
-    @AssertTrue(message = INVALID_TIMESTAMP_MESSAGE)
-    public boolean isValidTimestamp() {
-        String validTimestampFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        DateFormat dateFormat = new SimpleDateFormat(validTimestampFormat);
-        try {
-            dateFormat.parse(timestamp);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
     @AssertTrue(message = INVALID_SOURCE_NUMBER_MESSAGE)
     public boolean isValidSourceNumber() {
