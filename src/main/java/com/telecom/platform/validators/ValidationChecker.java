@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.telecom.platform.validators.ValidationMessages.VALIDATION_ERRORS_MAPPER;
-
 @Component
 public class ValidationChecker {
 
@@ -30,7 +28,7 @@ public class ValidationChecker {
         if(!constraintViolations.isEmpty()) {
 
             List<ValidationError> errors = constraintViolations.stream()
-                    .map(error -> new ValidationError(VALIDATION_ERRORS_MAPPER.get(error.getMessage()), error.getMessage()))
+                    .map(error -> new ValidationError(error.getPropertyPath().toString(), error.getMessage()))
                     .collect(Collectors.toList());
 
             throw new InvalidRequestResourceException(errors, ERROR_MESSAGE);

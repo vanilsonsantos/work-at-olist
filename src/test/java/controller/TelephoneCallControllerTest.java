@@ -20,18 +20,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest
-//@WebAppConfiguration
 @ContextConfiguration(classes = Application.class)
-//@AutoConfigureMockMvc
-@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest()
 
 public class TelephoneCallControllerTest {
 
     @Autowired
     private WebApplicationContext context;
-
-//    private MockMvc mvc;
 
     private MockMvc mvc;
 
@@ -58,7 +53,7 @@ public class TelephoneCallControllerTest {
                 .andExpect(status().is(422));
     }
 
-    public static String asJsonString(final Object obj) {
+    private String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             final String jsonContent = mapper.writeValueAsString(obj);

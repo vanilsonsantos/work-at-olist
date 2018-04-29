@@ -10,18 +10,8 @@ public class RecordCallRequestResourceTestBuilder {
     private String source = "2799347645";
     private String destination = "5198762356";
 
-    public RecordCallRequestResourceTestBuilder withTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-        return this;
-    }
-
     public RecordCallRequestResourceTestBuilder withSource(String source) {
         this.source = source;
-        return this;
-    }
-
-    public RecordCallRequestResourceTestBuilder withDestination(String destination) {
-        this.destination = destination;
         return this;
     }
 
