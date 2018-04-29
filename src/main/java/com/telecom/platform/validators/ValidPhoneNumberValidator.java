@@ -4,9 +4,11 @@ import com.telecom.platform.request.RecordCallRequestResource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.regex.Pattern;
 
 import static com.telecom.platform.validators.ValidationMessages.INVALID_DESTINATION_NUMBER_MESSAGE;
 import static com.telecom.platform.validators.ValidationMessages.INVALID_SOURCE_NUMBER_MESSAGE;
+import static java.util.regex.Pattern.compile;
 
 public class ValidPhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, RecordCallRequestResource> {
     @Override
@@ -39,7 +41,7 @@ public class ValidPhoneNumberValidator implements ConstraintValidator<ValidPhone
             return false;
         } else {
             String validPhoneNumberRegularExpression = "ˆ?(?:([1-9][0-9])\\s?)?(?:((?:9\\d|[2-9])\\d{3})\\-?(\\d{4}))$";
-            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(validPhoneNumberRegularExpression);
+            Pattern pattern = compile(validPhoneNumberRegularExpression);
             return pattern.matcher(number).matches();
         }
     }
