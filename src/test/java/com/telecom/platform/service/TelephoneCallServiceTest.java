@@ -1,6 +1,7 @@
 package com.telecom.platform.service;
 
 import com.telecom.platform.domain.CallRecord;
+import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.repository.CallRecordDocumentTestBuilder;
 import com.telecom.platform.repository.CallRecordRepository;
 import com.telecom.platform.repository.documents.CallRecordDocument;
@@ -47,7 +48,7 @@ public class TelephoneCallServiceTest {
     }
 
     @Test
-    public void shouldReturnCallRecordWhenGettingById() {
+    public void shouldReturnCallRecordWhenGettingById() throws CallRecordNotFoundException {
         CallRecordDocument callRecordDocument = callRecordDocumentTestBuilder.build();
         when(callRecordRepository.findById(any())).thenReturn(Optional.of(callRecordDocument));
 

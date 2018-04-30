@@ -3,13 +3,17 @@ package com.telecom.platform.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telecom.platform.Application;
 import com.telecom.platform.domain.CallRecord;
+import com.telecom.platform.domain.CallRecordTestBuilder;
+import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.exceptions.GlobalExceptionHandler;
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
 import com.telecom.platform.request.CallRecordRequestResource;
+import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.response.CallRecordErrorResponse;
+import com.telecom.platform.response.CallRecordErrorResponseTestBuilder;
 import com.telecom.platform.service.TelephoneCallService;
 import com.telecom.platform.validators.ValidationChecker;
 import com.telecom.platform.validators.ValidationError;
-import com.telecom.platform.domain.CallRecordTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
-import com.telecom.platform.response.CallRecordErrorResponseTestBuilder;
 
 import java.util.Collections;
 
@@ -72,7 +74,6 @@ public class TelephoneCallControllerTest {
         //given
         CallRecordRequestResource recordCallRequestResource = recordCallRequestResourceTestBuilder
                 .build();
-
         doThrow(new InvalidRequestResourceException(
                 Collections.singletonList(new ValidationError("source", "Invalid source")),
                 "Invalid source message"
@@ -117,17 +118,14 @@ public class TelephoneCallControllerTest {
     }
 
     @Test
-    public void shouldReturn200StatusWhenGettingCallRecordById() throws Exception {
+    public void shouldReturn200StatusWhenGettingCallRecordById() throws Exception, CallRecordNotFoundException {
         //given
-        CallRecordRequestResource invalidRecordCallRequestResource = recordCallRequestResourceTestBuilder
-                .build();
         CallRecord expectedCallRecordResponse = callRecordTestBuilder.build();
         when(telephoneCallService.findById(anyString())).thenReturn(expectedCallRecordResponse);
 
         //when
         ResultActions response = mvc.perform(get("/telecom/calls/{id}", "5ae762aa106e481143ff33b6")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(invalidRecordCallRequestResource))
         );
 
         //then
@@ -139,12 +137,32 @@ public class TelephoneCallControllerTest {
         );
     }
 
+    @Test
+    public void shouldReturn404StatusWhenGettingCallRecordByIdAndRecordDoesNotExists() throws Exception, CallRecordNotFoundException {
+        //given
+        CallRecordErrorResponse expectedCallRecordResponse = callRecordErrorResponseTestBuilder
+                .withErrors(null)
+                .build();
+        when(telephoneCallService.findById(anyString())).thenThrow(new CallRecordNotFoundException("5ae762aa106e481143ff33b6"));
+
+        //when
+        ResultActions response = mvc.perform(get("/telecom/calls/{id}", "5ae762aa106e481143ff33b6")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        response.andExpect(status().is(404));
+        assertJsonEquals(
+                asJsonString(expectedCallRecordResponse),
+                response.andReturn().getResponse().getContentAsString(),
+                net.javacrumbs.jsonunit.JsonAssert.when(IGNORING_VALUES)
+        );
+    }
+
     private String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            System.out.println(jsonContent);
-            return jsonContent;
+            return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

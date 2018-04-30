@@ -22,4 +22,8 @@ public class CallRecordErrorResponseTestBuilder {
     }
 
 
+    public CallRecordErrorResponseTestBuilder withErrors(List<ValidationError> validationErrors) {
+        this.errors = validationErrors;
+        return this;
+    }
 }

@@ -1,5 +1,6 @@
 package com.telecom.platform.controller;
 
+import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
 import com.telecom.platform.service.TelephoneCallService;
 import com.telecom.platform.validators.ValidationChecker;
@@ -31,7 +32,7 @@ public class TelephoneCallController {
 
     @RequestMapping(value = "/calls/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getRecordCall(@PathVariable String id) {
+    public ResponseEntity getRecordCall(@PathVariable String id) throws CallRecordNotFoundException {
         return new ResponseEntity(telephoneCallService.findById(id), HttpStatus.OK);
     }
 

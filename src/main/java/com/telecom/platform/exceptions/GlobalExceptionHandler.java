@@ -19,4 +19,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CallRecordNotFoundException.class)
+    public ResponseEntity handleCallRecordNotFoundException(CallRecordNotFoundException ex) {
+        return new ResponseEntity(new CallRecordErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null
+        ), HttpStatus.NOT_FOUND);
+    }
+
 }

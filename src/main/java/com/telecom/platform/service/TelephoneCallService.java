@@ -1,6 +1,7 @@
 package com.telecom.platform.service;
 
 import com.telecom.platform.domain.CallRecord;
+import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.repository.CallRecordRepository;
 import com.telecom.platform.repository.documents.CallRecordDocument;
 import com.telecom.platform.request.CallRecordRequestResource;
@@ -29,8 +30,9 @@ public class TelephoneCallService {
         return new CallRecord(callRecordDocument);
     }
 
-    public CallRecord findById(String id) {
+    public CallRecord findById(String id) throws CallRecordNotFoundException {
         Optional<CallRecordDocument> callRecordDocument = callRecordRepository.findById(id);
-        return callRecordDocument.map(CallRecord::new).orElse(null);
+        return callRecordDocument.map(CallRecord::new)
+                .orElseThrow(() -> new CallRecordNotFoundException(id));
     }
 }

@@ -1,5 +1,6 @@
 package com.telecom.platform.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.telecom.platform.validators.ValidationError;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CallRecordErrorResponse {
     private int code;
     private String message;
