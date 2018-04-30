@@ -1,6 +1,4 @@
-package request;
-
-import com.telecom.platform.request.CallRecordRequestResource;
+package com.telecom.platform.request;
 
 public class RecordCallRequestResourceTestBuilder {
 

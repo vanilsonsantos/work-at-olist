@@ -1,6 +1,5 @@
-package validators;
+package com.telecom.platform.validators;
 
-import com.telecom.platform.validators.TimestampValidator;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

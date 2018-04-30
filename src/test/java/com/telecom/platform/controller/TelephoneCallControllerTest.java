@@ -1,8 +1,7 @@
-package controller;
+package com.telecom.platform.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telecom.platform.Application;
-import com.telecom.platform.controller.TelephoneCallController;
 import com.telecom.platform.domain.CallRecord;
 import com.telecom.platform.exceptions.GlobalExceptionHandler;
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
@@ -10,7 +9,7 @@ import com.telecom.platform.request.CallRecordRequestResource;
 import com.telecom.platform.service.TelephoneCallService;
 import com.telecom.platform.validators.ValidationChecker;
 import com.telecom.platform.validators.ValidationError;
-import domain.CallRecordTestBuilder;
+import com.telecom.platform.domain.CallRecordTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +22,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import request.RecordCallRequestResourceTestBuilder;
-import response.CallRecordErrorResponseTestBuilder;
+import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.response.CallRecordErrorResponseTestBuilder;
 
 import java.util.Collections;
 
@@ -39,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = Application.class)
 @SpringBootTest()
-
 public class TelephoneCallControllerTest {
 
     @Mock

@@ -1,6 +1,4 @@
-package domain;
-
-import com.telecom.platform.domain.CallRecord;
+package com.telecom.platform.domain;
 
 public class CallRecordTestBuilder {
 

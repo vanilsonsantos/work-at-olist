@@ -1,7 +1,6 @@
-package request;
+package com.telecom.platform.request;
 
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
-import com.telecom.platform.request.CallRecordRequestResource;
 import com.telecom.platform.validators.ValidationChecker;
 import com.telecom.platform.validators.ValidationError;
 import org.junit.Before;

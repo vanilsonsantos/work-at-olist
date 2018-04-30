@@ -1,10 +1,9 @@
-package validators;
+package com.telecom.platform.validators;
 
-import com.telecom.platform.validators.ValidPhoneNumberValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
 
 import javax.validation.ConstraintValidatorContext;
 

@@ -1,20 +1,29 @@
 package com.telecom.platform.service;
 
 import com.telecom.platform.domain.CallRecord;
+import com.telecom.platform.repository.CallRecordRepository;
+import com.telecom.platform.repository.documents.CallRecordDocument;
 import com.telecom.platform.request.CallRecordRequestResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TelephoneCallService {
 
+    private CallRecordRepository callRecordRepository;
+
+    @Autowired
+    public TelephoneCallService(CallRecordRepository callRecordRepository) {
+        this.callRecordRepository = callRecordRepository;
+    }
+
     public CallRecord save(CallRecordRequestResource callRecordRequestResource) {
-        return new CallRecord(
-                "8686abdd-f024-4e96-a546-71349f2e2ecb",
+        CallRecordDocument callRecordDocument = callRecordRepository.save(new CallRecordDocument(
                 callRecordRequestResource.getType(),
                 callRecordRequestResource.getTimestamp(),
                 callRecordRequestResource.getCallId(),
                 callRecordRequestResource.getSource(),
-                callRecordRequestResource.getDestination()
-        );
+                callRecordRequestResource.getDestination()));
+        return new CallRecord(callRecordDocument);
     }
 }

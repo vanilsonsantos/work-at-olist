@@ -1,6 +1,5 @@
-package response;
+package com.telecom.platform.response;
 
-import com.telecom.platform.response.CallRecordErrorResponse;
 import com.telecom.platform.validators.ValidationError;
 
 import java.util.Collections;
