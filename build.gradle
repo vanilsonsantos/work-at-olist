@@ -16,7 +16,7 @@ apply plugin: 'io.spring.dependency-management'
 sourceCompatibility = 1.8
 
 jar {
-    baseName = 'myproject'
+    baseName = 'telecom-platform'
     version =  '0.0.1-SNAPSHOT'
 }
 

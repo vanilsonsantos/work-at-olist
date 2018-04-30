@@ -1,0 +1,14 @@
+spring:
+    data:
+        mongodb:
+            database: telecom
+            host: localhost
+            port: 27017
+---
+spring:
+    profiles: staging
+    data:
+        mongodb:
+            database: telecom
+            host: localhost
+            port: 27017
