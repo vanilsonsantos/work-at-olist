@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +32,8 @@ import java.util.Collections;
 
 import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_VALUES;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -110,11 +113,14 @@ public class TelephoneCallControllerTest {
 
         //then
         response.andExpect(status().is(201));
+        MockHttpServletResponse result = response.andReturn().getResponse();
+        String expectedLocationUrl = String.format("http://localhost/calls/%s", expectedCallRecordResponse.getId());
         assertJsonEquals(
                 asJsonString(expectedCallRecordResponse),
-                response.andReturn().getResponse().getContentAsString(),
+                result.getContentAsString(),
                 net.javacrumbs.jsonunit.JsonAssert.when(IGNORING_VALUES)
         );
+        assertThat(result.getHeader("location"), is(expectedLocationUrl));
     }
 
     @Test
@@ -143,10 +149,11 @@ public class TelephoneCallControllerTest {
         CallRecordErrorResponse expectedCallRecordResponse = callRecordErrorResponseTestBuilder
                 .withErrors(null)
                 .build();
-        when(telephoneCallService.findById(anyString())).thenThrow(new CallRecordNotFoundException("5ae762aa106e481143ff33b6"));
+        String expectedCallRecordId = "5ae762aa106e481143ff33b6";
+        when(telephoneCallService.findById(anyString())).thenThrow(new CallRecordNotFoundException(expectedCallRecordId));
 
         //when
-        ResultActions response = mvc.perform(get("/telecom/calls/{id}", "5ae762aa106e481143ff33b6")
+        ResultActions response = mvc.perform(get("/telecom/calls/{id}", expectedCallRecordId)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 

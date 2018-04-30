@@ -1,14 +1,19 @@
 package com.telecom.platform.controller;
 
+import com.telecom.platform.domain.CallRecord;
 import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
+import com.telecom.platform.request.CallRecordRequestResource;
 import com.telecom.platform.service.TelephoneCallService;
 import com.telecom.platform.validators.ValidationChecker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.telecom.platform.request.CallRecordRequestResource;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import static com.telecom.platform.utils.TelephoneCallUrls.CALLS_BY_ID_ENDPOINT;
+import static com.telecom.platform.utils.TelephoneCallUrls.CALLS_ENDPOINT;
 
 @RestController
 @RequestMapping("/telecom")
@@ -23,17 +28,20 @@ public class TelephoneCallController {
         this.telephoneCallService = telephoneCallService;
     }
 
-    @RequestMapping(value = "/calls", method = RequestMethod.POST)
+    @RequestMapping(value = CALLS_ENDPOINT, method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity saveRecordCall(@RequestBody CallRecordRequestResource callRecordRequestResource) throws InvalidRequestResourceException {
+    public ResponseEntity saveRecordCall(UriComponentsBuilder uriComponentsBuilder,
+                                         @RequestBody CallRecordRequestResource callRecordRequestResource) throws InvalidRequestResourceException {
         validationChecker.validate(callRecordRequestResource);
-        return new ResponseEntity(telephoneCallService.save(callRecordRequestResource), HttpStatus.CREATED);
+        CallRecord callRecord = telephoneCallService.save(callRecordRequestResource);
+        UriComponents uriComponents = uriComponentsBuilder.path(CALLS_BY_ID_ENDPOINT).buildAndExpand(callRecord.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(callRecord);
     }
 
-    @RequestMapping(value = "/calls/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = CALLS_BY_ID_ENDPOINT, method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity getRecordCall(@PathVariable String id) throws CallRecordNotFoundException {
-        return new ResponseEntity(telephoneCallService.findById(id), HttpStatus.OK);
+        return ResponseEntity.ok().body(telephoneCallService.findById(id));
     }
 
 }
