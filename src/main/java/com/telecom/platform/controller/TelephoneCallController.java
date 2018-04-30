@@ -24,9 +24,15 @@ public class TelephoneCallController {
 
     @RequestMapping(value = "/calls", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity recordCall(@RequestBody CallRecordRequestResource callRecordRequestResource) throws InvalidRequestResourceException {
+    public ResponseEntity saveRecordCall(@RequestBody CallRecordRequestResource callRecordRequestResource) throws InvalidRequestResourceException {
         validationChecker.validate(callRecordRequestResource);
         return new ResponseEntity(telephoneCallService.save(callRecordRequestResource), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/calls/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity getRecordCall(@PathVariable String id) {
+        return new ResponseEntity(telephoneCallService.findById(id), HttpStatus.OK);
     }
 
 }

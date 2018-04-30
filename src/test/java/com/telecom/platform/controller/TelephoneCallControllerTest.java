@@ -30,8 +30,10 @@ import java.util.Collections;
 import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_VALUES;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -107,6 +109,29 @@ public class TelephoneCallControllerTest {
 
         //then
         response.andExpect(status().is(201));
+        assertJsonEquals(
+                asJsonString(expectedCallRecordResponse),
+                response.andReturn().getResponse().getContentAsString(),
+                net.javacrumbs.jsonunit.JsonAssert.when(IGNORING_VALUES)
+        );
+    }
+
+    @Test
+    public void shouldReturn200StatusWhenGettingCallRecordById() throws Exception {
+        //given
+        CallRecordRequestResource invalidRecordCallRequestResource = recordCallRequestResourceTestBuilder
+                .build();
+        CallRecord expectedCallRecordResponse = callRecordTestBuilder.build();
+        when(telephoneCallService.findById(anyString())).thenReturn(expectedCallRecordResponse);
+
+        //when
+        ResultActions response = mvc.perform(get("/telecom/calls/{id}", "5ae762aa106e481143ff33b6")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(invalidRecordCallRequestResource))
+        );
+
+        //then
+        response.andExpect(status().is(200));
         assertJsonEquals(
                 asJsonString(expectedCallRecordResponse),
                 response.andReturn().getResponse().getContentAsString(),

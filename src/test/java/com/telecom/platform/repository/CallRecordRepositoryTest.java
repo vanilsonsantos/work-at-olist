@@ -3,6 +3,7 @@ package com.telecom.platform.repository;
 import com.telecom.platform.repository.documents.CallRecordDocument;
 import com.telecom.platform.request.CallRecordRequestResource;
 import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -34,6 +37,11 @@ public class CallRecordRepositoryTest {
         recordCallRequestResourceTestBuilder = new RecordCallRequestResourceTestBuilder();
     }
 
+    @After
+    public void tearDown() {
+        callRecordRepository.deleteAll();
+    }
+
     @Test
     public void shouldCreateNewCallRecordDocument() {
         CallRecordRequestResource recordRequestResource = recordCallRequestResourceTestBuilder.build();
@@ -50,5 +58,29 @@ public class CallRecordRepositoryTest {
         assertThat(callRecordDocument.getCall_id(), is(recordRequestResource.getCallId()));
         assertThat(callRecordDocument.getSource(), is(recordRequestResource.getSource()));
         assertThat(callRecordDocument.getDestination(), is(recordRequestResource.getDestination()));
+    }
+
+    @Test
+    public void shouldGetNewCallRecordDocumentById() {
+        CallRecordRequestResource recordRequestResource = recordCallRequestResourceTestBuilder.build();
+        CallRecordDocument callRecordDocument = callRecordRepository.save(new CallRecordDocument(
+                recordRequestResource.getType(),
+                recordRequestResource.getTimestamp(),
+                recordRequestResource.getCallId(),
+                recordRequestResource.getSource(),
+                recordRequestResource.getDestination()));
+
+        Optional<CallRecordDocument> returnedCallRecordDocument =
+                callRecordRepository.findById(callRecordDocument.getId());
+
+        assertThat(returnedCallRecordDocument.isPresent(), is(true));
+
+        CallRecordDocument recordDocument = returnedCallRecordDocument.get();
+        assertNotNull(recordDocument.getId());
+        assertThat(recordDocument.getType(), is(recordRequestResource.getType()));
+        assertThat(recordDocument.getTimestamp(), is(recordRequestResource.getTimestamp()));
+        assertThat(recordDocument.getCall_id(), is(recordRequestResource.getCallId()));
+        assertThat(recordDocument.getSource(), is(recordRequestResource.getSource()));
+        assertThat(recordDocument.getDestination(), is(recordRequestResource.getDestination()));
     }
 }

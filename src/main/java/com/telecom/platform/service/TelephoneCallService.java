@@ -7,6 +7,8 @@ import com.telecom.platform.request.CallRecordRequestResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TelephoneCallService {
 
@@ -25,5 +27,10 @@ public class TelephoneCallService {
                 callRecordRequestResource.getSource(),
                 callRecordRequestResource.getDestination()));
         return new CallRecord(callRecordDocument);
+    }
+
+    public CallRecord findById(String id) {
+        Optional<CallRecordDocument> callRecordDocument = callRecordRepository.findById(id);
+        return callRecordDocument.map(CallRecord::new).orElse(null);
     }
 }
