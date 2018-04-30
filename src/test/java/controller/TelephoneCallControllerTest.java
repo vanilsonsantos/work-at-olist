@@ -2,20 +2,37 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telecom.platform.Application;
-import com.telecom.platform.request.RecordCallRequestResource;
+import com.telecom.platform.controller.TelephoneCallController;
+import com.telecom.platform.domain.CallRecord;
+import com.telecom.platform.exceptions.GlobalExceptionHandler;
+import com.telecom.platform.exceptions.InvalidRequestResourceException;
+import com.telecom.platform.request.CallRecordRequestResource;
+import com.telecom.platform.service.TelephoneCallService;
+import com.telecom.platform.validators.ValidationChecker;
+import com.telecom.platform.validators.ValidationError;
+import domain.CallRecordTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import request.RecordCallRequestResourceTestBuilder;
+import response.CallRecordErrorResponseTestBuilder;
 
+import java.util.Collections;
+
+import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_VALUES;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,32 +42,78 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TelephoneCallControllerTest {
 
-    @Autowired
-    private WebApplicationContext context;
+    @Mock
+    private TelephoneCallService telephoneCallService;
+
+    @Mock
+    private ValidationChecker validationChecker;
+
+    @InjectMocks
+    private TelephoneCallController telephoneCallController;
 
     private MockMvc mvc;
-
     private RecordCallRequestResourceTestBuilder recordCallRequestResourceTestBuilder;
+    private CallRecordErrorResponseTestBuilder callRecordErrorResponseTestBuilder;
+    private CallRecordTestBuilder callRecordTestBuilder;
 
     @Before
     public void setup() {
         mvc = MockMvcBuilders
-                .webAppContextSetup(context)
+                .standaloneSetup(telephoneCallController)
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
         recordCallRequestResourceTestBuilder = new RecordCallRequestResourceTestBuilder();
+        callRecordErrorResponseTestBuilder = new CallRecordErrorResponseTestBuilder();
+        callRecordTestBuilder = new CallRecordTestBuilder();
     }
 
     @Test
-    public void should422IfRequestBodyIsInvalidWhenCreatingNewCallRecord() throws Exception {
-        RecordCallRequestResource invalidRecordCallRequestResource = recordCallRequestResourceTestBuilder
-                .withSource("11-invalid-99")
+    public void shouldReturn422StatusIfRequestBodyIsInvalidWhenCreatingNewCallRecord() throws Exception {
+        //given
+        CallRecordRequestResource recordCallRequestResource = recordCallRequestResourceTestBuilder
                 .build();
 
-        mvc.perform(post("/telecom/calls")
+        doThrow(new InvalidRequestResourceException(
+                Collections.singletonList(new ValidationError("source", "Invalid source")),
+                "Invalid source message"
+        )).when(validationChecker).validate(any());
+
+        //when
+        ResultActions response = mvc.perform(post("/telecom/calls")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(recordCallRequestResource))
+        );
+
+        //then
+        response.andExpect(status().is(422));
+        assertJsonEquals(
+                asJsonString(callRecordErrorResponseTestBuilder.build()),
+                response.andReturn().getResponse().getContentAsString(),
+                net.javacrumbs.jsonunit.JsonAssert.when(IGNORING_VALUES)
+        );
+    }
+
+    @Test
+    public void shouldReturn201StatusWhenCreatingNewCallRecord() throws Exception {
+        //given
+        CallRecordRequestResource invalidRecordCallRequestResource = recordCallRequestResourceTestBuilder
+                .build();
+        CallRecord expectedCallRecordResponse = callRecordTestBuilder.build();
+        when(telephoneCallService.save(any())).thenReturn(expectedCallRecordResponse);
+
+        //when
+        ResultActions response = mvc.perform(post("/telecom/calls")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(invalidRecordCallRequestResource))
-        )
-                .andExpect(status().is(422));
+        );
+
+        //then
+        response.andExpect(status().is(201));
+        assertJsonEquals(
+                asJsonString(expectedCallRecordResponse),
+                response.andReturn().getResponse().getContentAsString(),
+                net.javacrumbs.jsonunit.JsonAssert.when(IGNORING_VALUES)
+        );
     }
 
     private String asJsonString(final Object obj) {

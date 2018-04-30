@@ -1,6 +1,6 @@
 package request;
 
-import com.telecom.platform.request.RecordCallRequestResource;
+import com.telecom.platform.request.CallRecordRequestResource;
 
 public class RecordCallRequestResourceTestBuilder {
 
@@ -15,8 +15,8 @@ public class RecordCallRequestResourceTestBuilder {
         return this;
     }
 
-    public RecordCallRequestResource build() {
-        return new RecordCallRequestResource(
+    public CallRecordRequestResource build() {
+        return new CallRecordRequestResource(
                 type,
                 timestamp,
                 callId,

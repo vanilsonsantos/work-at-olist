@@ -1,6 +1,6 @@
 package com.telecom.platform.validators;
 
-import com.telecom.platform.request.RecordCallRequestResource;
+import com.telecom.platform.request.CallRecordRequestResource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,13 +10,13 @@ import static com.telecom.platform.validators.ValidationMessages.INVALID_DESTINA
 import static com.telecom.platform.validators.ValidationMessages.INVALID_SOURCE_NUMBER_MESSAGE;
 import static java.util.regex.Pattern.compile;
 
-public class ValidPhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, RecordCallRequestResource> {
+public class ValidPhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, CallRecordRequestResource> {
     @Override
-    public boolean isValid(RecordCallRequestResource recordCallRequestResource, ConstraintValidatorContext context) {
+    public boolean isValid(CallRecordRequestResource callRecordRequestResource, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
-        if (shouldValidatePhoneNumber(recordCallRequestResource.getType())) {
-            boolean isValidSourceNumber = isValidPhoneNumber(recordCallRequestResource.getSource());
-            boolean isValidDestinationNumber = isValidPhoneNumber(recordCallRequestResource.getDestination());
+        if (shouldValidatePhoneNumber(callRecordRequestResource.getType())) {
+            boolean isValidSourceNumber = isValidPhoneNumber(callRecordRequestResource.getSource());
+            boolean isValidDestinationNumber = isValidPhoneNumber(callRecordRequestResource.getDestination());
             if (!isValidSourceNumber) {
                 context.buildConstraintViolationWithTemplate(INVALID_SOURCE_NUMBER_MESSAGE)
                         .addPropertyNode("source")
