@@ -16,7 +16,6 @@ import static com.telecom.platform.utils.TelephoneCallUrls.CALLS_BY_ID_ENDPOINT;
 import static com.telecom.platform.utils.TelephoneCallUrls.CALLS_ENDPOINT;
 
 @RestController
-@RequestMapping("/telecom")
 public class TelephoneCallController {
 
     private ValidationChecker validationChecker;

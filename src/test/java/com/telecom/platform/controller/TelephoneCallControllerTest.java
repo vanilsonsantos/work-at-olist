@@ -83,7 +83,7 @@ public class TelephoneCallControllerTest {
         )).when(validationChecker).validate(any());
 
         //when
-        ResultActions response = mvc.perform(post("/telecom/calls")
+        ResultActions response = mvc.perform(post("/calls")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(recordCallRequestResource))
         );
@@ -106,7 +106,7 @@ public class TelephoneCallControllerTest {
         when(telephoneCallService.save(any())).thenReturn(expectedCallRecordResponse);
 
         //when
-        ResultActions response = mvc.perform(post("/telecom/calls")
+        ResultActions response = mvc.perform(post("/calls")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(invalidRecordCallRequestResource))
         );
@@ -130,7 +130,7 @@ public class TelephoneCallControllerTest {
         when(telephoneCallService.findById(anyString())).thenReturn(expectedCallRecordResponse);
 
         //when
-        ResultActions response = mvc.perform(get("/telecom/calls/{id}", "5ae762aa106e481143ff33b6")
+        ResultActions response = mvc.perform(get("/calls/{id}", "5ae762aa106e481143ff33b6")
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -153,7 +153,7 @@ public class TelephoneCallControllerTest {
         when(telephoneCallService.findById(anyString())).thenThrow(new CallRecordNotFoundException(expectedCallRecordId));
 
         //when
-        ResultActions response = mvc.perform(get("/telecom/calls/{id}", expectedCallRecordId)
+        ResultActions response = mvc.perform(get("/calls/{id}", expectedCallRecordId)
                 .contentType(MediaType.APPLICATION_JSON)
         );
 

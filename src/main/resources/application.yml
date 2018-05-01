@@ -1,3 +1,7 @@
+server:
+    servlet:
+      context-path: /telecom
+
 spring:
     data:
         mongodb:
@@ -5,6 +9,10 @@ spring:
             host: localhost
             port: 27017
 ---
+server:
+    servlet:
+      context-path: /telecom
+
 spring:
     profiles: staging
     data:
