@@ -21,18 +21,24 @@ public class TelephoneCallService {
     }
 
     public CallRecord save(CallRecordRequestResource callRecordRequestResource) {
+        String type = callRecordRequestResource.getType();
         CallRecordDocument callRecordDocument = callRecordRepository.save(new CallRecordDocument(
-                callRecordRequestResource.getType(),
+                type,
                 callRecordRequestResource.getTimestamp(),
                 callRecordRequestResource.getCallId(),
-                callRecordRequestResource.getSource(),
-                callRecordRequestResource.getDestination()));
+                shouldIncludePhoneNumber(type)? callRecordRequestResource.getSource() : null,
+                shouldIncludePhoneNumber(type)? callRecordRequestResource.getDestination() : null
+            )
+        );
         return new CallRecord(callRecordDocument);
+    }
+
+    private boolean shouldIncludePhoneNumber(String type) {
+        return type.equalsIgnoreCase("start");
     }
 
     public CallRecord findById(String id) throws CallRecordNotFoundException {
         Optional<CallRecordDocument> callRecordDocument = callRecordRepository.findById(id);
-        return callRecordDocument.map(CallRecord::new)
-                .orElseThrow(() -> new CallRecordNotFoundException(id));
+        return callRecordDocument.map(CallRecord::new).orElseThrow(() -> new CallRecordNotFoundException(id));
     }
 }
