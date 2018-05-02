@@ -4,3 +4,6 @@ spring:
   cloud:
       config:
           uri: http://cloud-configuration-server.herokuapp.com
+
+encrypt:
+  key: ${ENCRYPT_KEY}
