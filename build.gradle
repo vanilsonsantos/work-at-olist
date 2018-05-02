@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.0.BUILD-SNAPSHOT'
+        classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')
     }
 }
 
@@ -26,7 +27,16 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.M9"
+    }
+}
+
 dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-config')
+    compile('org.springframework.cloud:spring-cloud-starter')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.projectlombok:lombok:1.16.20")
     compile("net.javacrumbs.json-unit:json-unit:1.28.2")

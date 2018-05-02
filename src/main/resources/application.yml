@@ -8,17 +8,4 @@ spring:
             database: telecom
             host: localhost
             port: 27017
----
-server:
-    servlet:
-      context-path: /telecom
 
-spring:
-    profiles: staging
-    data:
-        mongodb:
-            database: heroku_5rkb64vz
-            host: ds119088.mlab.com
-            port: 19088
-            username: telecom
-            password: telecom
