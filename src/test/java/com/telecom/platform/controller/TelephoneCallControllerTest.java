@@ -8,7 +8,7 @@ import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.exceptions.GlobalExceptionHandler;
 import com.telecom.platform.exceptions.InvalidRequestResourceException;
 import com.telecom.platform.request.CallRecordRequestResource;
-import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.request.CallRecordRequestResourceTestBuilder;
 import com.telecom.platform.response.CallRecordErrorResponse;
 import com.telecom.platform.response.CallRecordErrorResponseTestBuilder;
 import com.telecom.platform.service.TelephoneCallService;
@@ -57,7 +57,7 @@ public class TelephoneCallControllerTest {
     private TelephoneCallController telephoneCallController;
 
     private MockMvc mvc;
-    private RecordCallRequestResourceTestBuilder recordCallRequestResourceTestBuilder;
+    private CallRecordRequestResourceTestBuilder callRecordRequestResourceTestBuilder;
     private CallRecordErrorResponseTestBuilder callRecordErrorResponseTestBuilder;
     private CallRecordTestBuilder callRecordTestBuilder;
 
@@ -67,7 +67,7 @@ public class TelephoneCallControllerTest {
                 .standaloneSetup(telephoneCallController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
-        recordCallRequestResourceTestBuilder = new RecordCallRequestResourceTestBuilder();
+        callRecordRequestResourceTestBuilder = new CallRecordRequestResourceTestBuilder();
         callRecordErrorResponseTestBuilder = new CallRecordErrorResponseTestBuilder();
         callRecordTestBuilder = new CallRecordTestBuilder();
     }
@@ -75,7 +75,7 @@ public class TelephoneCallControllerTest {
     @Test
     public void shouldReturn422StatusIfRequestBodyIsInvalidWhenCreatingNewCallRecord() throws Exception {
         //given
-        CallRecordRequestResource recordCallRequestResource = recordCallRequestResourceTestBuilder
+        CallRecordRequestResource recordCallRequestResource = callRecordRequestResourceTestBuilder
                 .build();
         doThrow(new InvalidRequestResourceException(
                 Collections.singletonList(new ValidationError("source", "Invalid source")),
@@ -100,7 +100,7 @@ public class TelephoneCallControllerTest {
     @Test
     public void shouldReturn201StatusWhenCreatingNewCallRecord() throws Exception {
         //given
-        CallRecordRequestResource invalidRecordCallRequestResource = recordCallRequestResourceTestBuilder
+        CallRecordRequestResource invalidRecordCallRequestResource = callRecordRequestResourceTestBuilder
                 .build();
         CallRecord expectedCallRecordResponse = callRecordTestBuilder.build();
         when(telephoneCallService.save(any())).thenReturn(expectedCallRecordResponse);

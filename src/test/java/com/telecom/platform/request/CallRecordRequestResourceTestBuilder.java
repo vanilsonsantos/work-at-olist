@@ -1,6 +1,6 @@
 package com.telecom.platform.request;
 
-public class RecordCallRequestResourceTestBuilder {
+public class CallRecordRequestResourceTestBuilder {
 
     private String type = "start";
     private String timestamp = "2016-02-29T12:00:00Z";
@@ -8,7 +8,7 @@ public class RecordCallRequestResourceTestBuilder {
     private String source = "2799347645";
     private String destination = "5198762356";
 
-    public RecordCallRequestResourceTestBuilder withSource(String source) {
+    public CallRecordRequestResourceTestBuilder withSource(String source) {
         this.source = source;
         return this;
     }

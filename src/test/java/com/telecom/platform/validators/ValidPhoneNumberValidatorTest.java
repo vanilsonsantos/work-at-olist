@@ -3,7 +3,7 @@ package com.telecom.platform.validators;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.request.CallRecordRequestResourceTestBuilder;
 
 import javax.validation.ConstraintValidatorContext;
 
@@ -16,7 +16,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ValidPhoneNumberValidatorTest {
 
     private ValidPhoneNumberValidator validPhoneNumberValidator = new ValidPhoneNumberValidator();
-    private RecordCallRequestResourceTestBuilder recordCallRequestResourceTestBuilder;
+    private CallRecordRequestResourceTestBuilder callRecordRequestResourceTestBuilder;
 
     @Mock
     private ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext nodeBuilderCustomizableContext;
@@ -33,13 +33,13 @@ public class ValidPhoneNumberValidatorTest {
         when(constraintViolationBuilder.addConstraintViolation()).thenReturn(constraintValidatorContext);
         when(constraintViolationBuilder.addPropertyNode(anyString())).thenReturn(nodeBuilderCustomizableContext);
         when(constraintValidatorContext.buildConstraintViolationWithTemplate(anyString())).thenReturn(constraintViolationBuilder);
-        recordCallRequestResourceTestBuilder = new RecordCallRequestResourceTestBuilder();
+        callRecordRequestResourceTestBuilder = new CallRecordRequestResourceTestBuilder();
     }
 
     @Test
     public void shouldPhoneNumberBeValid() {
         boolean isValid = validPhoneNumberValidator.isValid(
-                recordCallRequestResourceTestBuilder.build(),
+                callRecordRequestResourceTestBuilder.build(),
                 constraintValidatorContext
         );
         assertTrue(isValid);
@@ -48,7 +48,7 @@ public class ValidPhoneNumberValidatorTest {
     @Test
     public void shouldPhoneNumberBeInvalid() {
         boolean isValid = validPhoneNumberValidator.isValid(
-                recordCallRequestResourceTestBuilder.withSource("2016-02-invalid:00:00Z").build(),
+                callRecordRequestResourceTestBuilder.withSource("2016-02-invalid:00:00Z").build(),
                 constraintValidatorContext
         );
         assertFalse(isValid);

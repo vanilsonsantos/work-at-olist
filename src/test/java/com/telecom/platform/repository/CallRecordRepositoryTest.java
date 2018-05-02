@@ -2,7 +2,7 @@ package com.telecom.platform.repository;
 
 import com.telecom.platform.repository.documents.CallRecordDocument;
 import com.telecom.platform.request.CallRecordRequestResource;
-import com.telecom.platform.request.RecordCallRequestResourceTestBuilder;
+import com.telecom.platform.request.CallRecordRequestResourceTestBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +30,11 @@ public class CallRecordRepositoryTest {
     @Autowired
     private CallRecordRepository callRecordRepository;
 
-    private RecordCallRequestResourceTestBuilder recordCallRequestResourceTestBuilder;
+    private CallRecordRequestResourceTestBuilder callRecordRequestResourceTestBuilder;
 
     @Before
     public void setUp() {
-        recordCallRequestResourceTestBuilder = new RecordCallRequestResourceTestBuilder();
+        callRecordRequestResourceTestBuilder = new CallRecordRequestResourceTestBuilder();
     }
 
     @After
@@ -44,7 +44,7 @@ public class CallRecordRepositoryTest {
 
     @Test
     public void shouldCreateNewCallRecordDocument() {
-        CallRecordRequestResource recordRequestResource = recordCallRequestResourceTestBuilder.build();
+        CallRecordRequestResource recordRequestResource = callRecordRequestResourceTestBuilder.build();
         CallRecordDocument callRecordDocument = callRecordRepository.save(new CallRecordDocument(
                 recordRequestResource.getType(),
                 recordRequestResource.getTimestamp(),
@@ -62,7 +62,7 @@ public class CallRecordRepositoryTest {
 
     @Test
     public void shouldGetNewCallRecordDocumentById() {
-        CallRecordRequestResource recordRequestResource = recordCallRequestResourceTestBuilder.build();
+        CallRecordRequestResource recordRequestResource = callRecordRequestResourceTestBuilder.build();
         CallRecordDocument callRecordDocument = callRecordRepository.save(new CallRecordDocument(
                 recordRequestResource.getType(),
                 recordRequestResource.getTimestamp(),

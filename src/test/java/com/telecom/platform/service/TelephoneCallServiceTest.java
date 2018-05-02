@@ -5,7 +5,7 @@ import com.telecom.platform.exceptions.CallRecordNotFoundException;
 import com.telecom.platform.repository.CallRecordDocumentTestBuilder;
 import com.telecom.platform.repository.CallRecordRepository;
 import com.telecom.platform.repository.documents.CallRecordDocument;
-import com.telecom.platform.request.CallRecordRequestResource;
+import com.telecom.platform.request.CallRecordRequestResourceTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,7 +38,7 @@ public class TelephoneCallServiceTest {
         CallRecordDocument callRecordDocument = callRecordDocumentTestBuilder.build();
         when(callRecordRepository.save(any())).thenReturn(callRecordDocument);
 
-        CallRecord callRecord = telephoneCallService.save(new CallRecordRequestResource());
+        CallRecord callRecord = telephoneCallService.save(new CallRecordRequestResourceTestBuilder().build());
         assertThat(callRecord.getId(), is(callRecordDocument.getId()));
         assertThat(callRecord.getType(), is(callRecordDocument.getType()));
         assertThat(callRecord.getTimestamp(), is(callRecordDocument.getTimestamp()));
