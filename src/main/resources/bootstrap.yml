@@ -5,5 +5,6 @@ spring:
       config:
           uri: http://cloud-configuration-server.herokuapp.com
 
-encrypt:
-  key: ${ENCRYPT_KEY}
+jasypt:
+    encryptor:
+        password: ${JASYPT_ENCRYPTOR_PASSWORD}

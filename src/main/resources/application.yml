@@ -4,10 +4,9 @@ server:
 
 spring:
     data:
-      mongodb:
-        database: heroku_1l2dkbsl
-        host: ds211440.mlab.com
-        port: 11440
-        username: heroku_1l2dkbsl
-        password: '{cipher}82caf27ba6fd1f1419d714215d01e68eef508d1e9f6d58e96e92ac2795321d144874db698e9228c3d4c3cf6b05283341'
+        mongodb:
+            database: telecom
+            host: localhost
+            port: 27017
+
 

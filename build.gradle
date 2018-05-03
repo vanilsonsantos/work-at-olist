@@ -38,6 +38,7 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("com.github.ulisesbocchio:jasypt-spring-boot-starter:1.15")
     compile("org.projectlombok:lombok:1.16.20")
     compile("net.javacrumbs.json-unit:json-unit:1.28.2")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
